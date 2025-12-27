@@ -1,7 +1,7 @@
 package com.opencode.alumxbackend.common.exception;
 
 /**
- * class to handle Resourse Not Found Exception
+ * class to handle Resourse (In the database ) Not Found Exception
  */
 public class ResourceNotFoundException extends RuntimeException{
     String resourceName;

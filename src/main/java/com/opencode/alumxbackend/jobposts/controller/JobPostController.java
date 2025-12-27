@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 @RestController
-@RequestMapping("/api/dev/job-posts")
+@RequestMapping("/api/job-posts")
 @RequiredArgsConstructor
 public class JobPostController {
     private final JobPostService jobPostService;

@@ -18,6 +18,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+
+//conversation between two users
 @Entity
 @Table(name = "chats",
         indexes = {
@@ -27,6 +29,7 @@ import lombok.Setter;
         uniqueConstraints = {
                 @UniqueConstraint(name = "uk_chat_users", columnNames = {"user1Username", "user2Username"})
         }
+        
 )
 @AllArgsConstructor
 @NoArgsConstructor
