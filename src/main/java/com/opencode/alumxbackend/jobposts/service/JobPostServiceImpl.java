@@ -1,7 +1,7 @@
 package com.opencode.alumxbackend.jobposts.service;
 
 import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -35,7 +35,7 @@ public class JobPostServiceImpl implements JobPostService{
     @Override
     public List<JobPostResponse> getPostsByUser(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
+                .orElseThrow(() -> new ResourceNotFoundException("User with id  not found " + userId));
 
         List<JobPost> posts = jobPostRepository.findByUsernameOrderByCreatedAtDesc(user.getUsername());
         return JobPostResponse.fromEntities(posts);
@@ -85,9 +85,9 @@ public class JobPostServiceImpl implements JobPostService{
 
 
                 try{
-                    new URL(url); // this will chck wether hte url is coorect
+                    URI.create(url).toURL(); // this will chck whether url is correct
                 }
-                catch(MalformedURLException e){
+                catch(IllegalArgumentException | MalformedURLException e){
                     throw new BadRequestException("invalid url: " + url);
                 }
             });
