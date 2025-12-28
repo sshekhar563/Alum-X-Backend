@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.opencode.alumxbackend.common.exception.Errors.UnauthorizedAccessException;
+import com.opencode.alumxbackend.jobposts.dto.CommentRequest;
 import com.opencode.alumxbackend.jobposts.dto.JobPostRequest;
 import com.opencode.alumxbackend.jobposts.dto.JobPostResponse;
 import com.opencode.alumxbackend.jobposts.model.JobPost;

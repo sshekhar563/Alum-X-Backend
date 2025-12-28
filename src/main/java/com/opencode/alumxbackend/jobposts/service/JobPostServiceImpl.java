@@ -6,6 +6,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import com.opencode.alumxbackend.jobposts.dto.CommentRequest;
+import com.opencode.alumxbackend.jobposts.model.JobPostComment;
+import com.opencode.alumxbackend.jobposts.repository.CommentRepository;
 import com.opencode.alumxbackend.jobposts.model.JobPostLike;
 import com.opencode.alumxbackend.jobposts.repository.JobPostLikeRepository;
 import org.springframework.stereotype.Service;
@@ -31,7 +34,7 @@ public class JobPostServiceImpl implements JobPostService{
     private final JobPostLikeRepository jobPostLikeRepository;
     private final JobPostRepository jobPostRepository;
     private final UserRepository userRepository;
-
+    private final CommentRepository commentRepository;
     @Override
     public List<JobPostResponse> getPostsByUser(Long userId) {
         User user = userRepository.findById(userId)
@@ -40,6 +43,25 @@ public class JobPostServiceImpl implements JobPostService{
         List<JobPost> posts = jobPostRepository.findByUsernameOrderByCreatedAtDesc(user.getUsername());
         return JobPostResponse.fromEntities(posts);
     }
+
+    public void addComment(String postId, Long userId, CommentRequest request) {
+        JobPost post = jobPostRepository.findById(postId)
+                .orElseThrow(()->new ResourceNotFoundException("job post not found"));
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        JobPostComment comment = JobPostComment.builder()
+                .jobPost(post)
+                .user(user)
+                .content(request.content())
+                .build();
+
+        commentRepository.save(comment);
+
+    }
+
+
 
     @Override
     public void likePost(String postId, Long userId) {
