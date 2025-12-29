@@ -1,6 +1,7 @@
 package com.opencode.alumxbackend.chat.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Getter
@@ -9,10 +10,10 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class ChatSendRequest {
-    @NotBlank(message = "Sender Id is required")
+    @NotNull(message = "Sender Id is required")
     private Long senderId;
     
-    @NotBlank(message = "Reciever Id is required")
+    @NotNull(message = "Reciever Id is required")
     private Long recieverId;
 
     @NotBlank(message = "Content is required")
