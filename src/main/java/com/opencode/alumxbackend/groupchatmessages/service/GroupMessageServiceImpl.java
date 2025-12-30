@@ -13,7 +13,6 @@ import com.opencode.alumxbackend.groupchat.repository.GroupChatRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -25,10 +24,10 @@ public class GroupMessageServiceImpl implements GroupMessageService {
     private final GroupChatRepository groupChatRepository;
 
     @Override
+
     public GroupMessageResponse sendMessage(
             Long groupId,
-            SendGroupMessageRequest request
-    ) {
+            SendGroupMessageRequest request) {
 
         GroupChat group = groupChatRepository.findById(groupId)
                 .orElseThrow(() -> new GroupNotFoundException("Group id not found " + groupId));
@@ -37,9 +36,8 @@ public class GroupMessageServiceImpl implements GroupMessageService {
                 .stream()
                 .anyMatch(p -> p.getUserId().equals(request.getUserId()));
 
-
         if (!isMember) {
-            throw new UserNotMemberException("the userID :"+ request.getUserId() + " is not a member of This Group");
+            throw new UserNotMemberException(request.getUserId());
         }
 
         if (request.getContent() == null || request.getContent().trim().isEmpty()) {
@@ -66,8 +64,7 @@ public class GroupMessageServiceImpl implements GroupMessageService {
     @Override
     public List<GroupMessageResponse> fetchMessages(
             Long groupId,
-            Long userId
-    ) {
+            Long userId) {
 
         GroupChat group = groupChatRepository.findById(groupId)
                 .orElseThrow(() -> new RuntimeException("Group not found"));
@@ -94,5 +91,16 @@ public class GroupMessageServiceImpl implements GroupMessageService {
                 .content(message.getContent())
                 .createdAt(message.getCreatedAt())
                 .build();
+    }
+
+    @Override
+    public List<GroupMessageResponse> getAllGroupMessages(Long groupId) {
+        groupChatRepository.findById(groupId)
+                .orElseThrow(() -> new GroupNotFoundException("Group id not found: " + groupId));
+
+        return messageRepository.findByGroupIdOrderByCreatedAtAsc(groupId)
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
     }
 }
