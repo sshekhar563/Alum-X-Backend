@@ -3,6 +3,7 @@ package com.opencode.alumxbackend.groupchatmessages.service;
 import com.opencode.alumxbackend.groupchat.model.GroupChat;
 import com.opencode.alumxbackend.groupchat.model.Participant;
 import com.opencode.alumxbackend.groupchatmessages.dto.GroupMessageResponse;
+import com.opencode.alumxbackend.groupchatmessages.dto.GroupMessageSearchRequest;
 import com.opencode.alumxbackend.groupchatmessages.dto.SendGroupMessageRequest;
 import com.opencode.alumxbackend.groupchatmessages.exception.GroupNotFoundException;
 import com.opencode.alumxbackend.groupchatmessages.exception.InvalidMessageException;
@@ -102,5 +103,11 @@ public class GroupMessageServiceImpl implements GroupMessageService {
                 .stream()
                 .map(this::mapToResponse)
                 .toList();
+    }
+
+    @Override
+    public List<GroupMessageResponse> searchForMessage(Long groupId, Long userId, GroupMessageSearchRequest request) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'searchForMessage'");
     }
 }
