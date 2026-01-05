@@ -102,8 +102,6 @@ class UserSearchControllerTest {
                 .block();
     }
 
-    // ==================== POSITIVE TEST CASES ====================
-
     @Nested
     @DisplayName("Positive Test Cases - Valid Search Queries")
     class PositiveTests {
@@ -167,8 +165,6 @@ class UserSearchControllerTest {
     }
 
 
-    // ==================== NEGATIVE TEST CASES ====================
-
     @Nested
     @DisplayName("Negative Test Cases - Invalid Search Queries")
     class NegativeTests {
@@ -194,8 +190,6 @@ class UserSearchControllerTest {
             assertThat(result).isEmpty();
         }
     }
-
-    // ==================== SYMBOL TEST CASES ====================
 
     @Nested
     @DisplayName("Symbol Test Cases - Queries with Special Characters")
@@ -244,8 +238,6 @@ class UserSearchControllerTest {
         }
     }
 
-
-    // ==================== USERNAME VALIDATION TEST CASES ====================
 
     @Nested
     @DisplayName("Username Validation - Usernames should not start with symbols")
@@ -300,8 +292,6 @@ class UserSearchControllerTest {
             assertThat(result).isEmpty();
         }
     }
-
-    // ==================== EDGE CASES ====================
 
     @Nested
     @DisplayName("Edge Cases - Boundary and Special Scenarios")
