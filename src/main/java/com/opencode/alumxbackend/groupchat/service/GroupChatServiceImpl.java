@@ -18,12 +18,14 @@ import java.util.Set;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class GroupChatServiceImpl implements  GroupChatService {
     private final GroupChatRepository repository;
     private final UserRepository userRepository;
