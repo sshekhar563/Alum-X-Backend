@@ -2,13 +2,10 @@ package com.opencode.alumxbackend.groupchatreadreceipt.controller;
 
 import com.opencode.alumxbackend.groupchatreadreceipt.dto.GroupReadRequest;
 import com.opencode.alumxbackend.groupchatreadreceipt.dto.GroupReadResponse;
-import com.opencode.alumxbackend.groupchatreadreceipt.model.GroupReadState;
 import com.opencode.alumxbackend.groupchatreadreceipt.service.GroupReadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/groupsread")

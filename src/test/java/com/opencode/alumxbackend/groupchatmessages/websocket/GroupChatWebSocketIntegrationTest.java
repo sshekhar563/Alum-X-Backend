@@ -31,6 +31,8 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
+// TODO: import org.springframework.messaging.converter.Jackson2JsonMessageConverter;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -72,6 +74,7 @@ class GroupChatWebSocketIntegrationTest {
         
         stompClient = new WebSocketStompClient(sockJsClient);
         stompClient.setMessageConverter(new MappingJackson2MessageConverter());
+        // stompClient.setMessageConverter(new Jackson2JsonMessageConverter());
 
         // Clean up
         messageRepository.deleteAll();
@@ -85,7 +88,7 @@ class GroupChatWebSocketIntegrationTest {
         User user1 = createTestUser("user1", "user1@test.com");
         User user2 = createTestUser("user2", "user2@test.com");
         
-        GroupChat group = createTestGroup("Test Group", List.of(user1, user2));
+        GroupChat group = createTestGroup("Test Group", user1.getId(), List.of(user1, user2));
 
         // Queue to hold received messages
         BlockingQueue<GroupMessageResponse> receivedMessages = new ArrayBlockingQueue<>(1);
@@ -136,7 +139,7 @@ class GroupChatWebSocketIntegrationTest {
         User user2 = createTestUser("bob", "bob@test.com");
         User user3 = createTestUser("charlie", "charlie@test.com");
         
-        GroupChat group = createTestGroup("Team Chat", List.of(user1, user2, user3));
+        GroupChat group = createTestGroup("Team Chat", user1.getId(), List.of(user1, user2, user3));
 
         // Queues for each client
         BlockingQueue<GroupMessageResponse> client1Messages = new ArrayBlockingQueue<>(1);
@@ -192,8 +195,8 @@ class GroupChatWebSocketIntegrationTest {
         User user1 = createTestUser("user_a", "usera@test.com");
         User user2 = createTestUser("user_b", "userb@test.com");
         
-        GroupChat group1 = createTestGroup("Group 1", List.of(user1));
-        GroupChat group2 = createTestGroup("Group 2", List.of(user2));
+        GroupChat group1 = createTestGroup("Group 1", user1.getId(),  List.of(user1));
+        GroupChat group2 = createTestGroup("Group 2", user2.getId(), List.of(user2));
 
         // Connect clients to different group topics
         StompSession session1 = stompClient.connectAsync(wsUrl, new StompSessionHandlerAdapter() {})
@@ -253,9 +256,10 @@ class GroupChatWebSocketIntegrationTest {
         return userRepository.save(user);
     }
 
-    private GroupChat createTestGroup(String groupName, List<User> members) {
+    private GroupChat createTestGroup(String groupName, Long ownerId, List<User> members) {
         GroupChat group = new GroupChat();
         group.setGroupName(groupName);
+        group.setOwnerId(ownerId);
         group.setCreatedAt(LocalDateTime.now());
         
         List<Participant> participants = members.stream()

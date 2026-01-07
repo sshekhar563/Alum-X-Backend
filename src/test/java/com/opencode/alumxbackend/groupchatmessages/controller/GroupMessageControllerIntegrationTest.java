@@ -98,6 +98,7 @@ class GroupMessageControllerIntegrationTest {
         // Create a test group
         GroupChatRequest groupRequest = GroupChatRequest.builder()
                 .name("Test Group")
+                .ownerId(testUser1.getId())
                 .participants(List.of(
                         new GroupChatRequest.ParticipantRequest(testUser1.getId(), testUser1.getUsername()),
                         new GroupChatRequest.ParticipantRequest(testUser2.getId(), testUser2.getUsername())

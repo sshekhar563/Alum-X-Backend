@@ -25,7 +25,6 @@ public class AuraColorServiceImpl implements AuraColorService {
         loadColorMappings();
     }
 
-    @SuppressWarnings("unchecked")
     private void loadColorMappings() {
         try {
             ObjectMapper mapper = new ObjectMapper();
@@ -40,7 +39,6 @@ public class AuraColorServiceImpl implements AuraColorService {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public String getColor(String category, String value) {
         if (value == null || value.isBlank()) {
             return DEFAULT_COLOR;
@@ -48,6 +46,7 @@ public class AuraColorServiceImpl implements AuraColorService {
 
         Object categoryObj = colorMappings.get(category);
         if (categoryObj instanceof Map) {
+            @SuppressWarnings("unchecked")
             Map<String, Object> categoryColors = (Map<String, Object>) categoryObj;
             Object color = categoryColors.get(value);
             if (color instanceof String) {
@@ -58,9 +57,11 @@ public class AuraColorServiceImpl implements AuraColorService {
         // Check nested careerFields
         Object careerFieldsObj = colorMappings.get("careerFields");
         if (careerFieldsObj instanceof Map) {
+            @SuppressWarnings("unchecked")
             Map<String, Object> careerFields = (Map<String, Object>) careerFieldsObj;
             for (Object fieldValue : careerFields.values()) {
                 if (fieldValue instanceof Map) {
+                    @SuppressWarnings("unchecked")
                     Map<String, Object> nestedColors = (Map<String, Object>) fieldValue;
                     Object color = nestedColors.get(value);
                     if (color instanceof String) {

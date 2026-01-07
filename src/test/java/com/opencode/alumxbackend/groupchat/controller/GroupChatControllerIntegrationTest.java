@@ -108,6 +108,7 @@ class GroupChatControllerIntegrationTest {
     void createGroup_WithValidData_ReturnsCreatedGroup() {
         GroupChatRequest request = GroupChatRequest.builder()
                 .name("Study Group")
+                .ownerId(testUser1.getId())
                 .participants(List.of(
                         new GroupChatRequest.ParticipantRequest(testUser1.getId(), testUser1.getUsername()),
                         new GroupChatRequest.ParticipantRequest(testUser2.getId(), testUser2.getUsername()),
@@ -134,6 +135,7 @@ class GroupChatControllerIntegrationTest {
     void getGroupById_ExistingGroup_ReturnsGroup() {
         GroupChatRequest createRequest = GroupChatRequest.builder()
                 .name("Test Group")
+                .ownerId(testUser1.getId())
                 .participants(List.of(
                         new GroupChatRequest.ParticipantRequest(testUser1.getId(), testUser1.getUsername()),
                         new GroupChatRequest.ParticipantRequest(testUser2.getId(), testUser2.getUsername())
@@ -166,6 +168,7 @@ class GroupChatControllerIntegrationTest {
     void getGroupsForUser_UserInMultipleGroups_ReturnsAllGroups() {
         GroupChatRequest request1 = GroupChatRequest.builder()
                 .name("Group 1")
+                .ownerId(testUser1.getId())
                 .participants(List.of(
                         new GroupChatRequest.ParticipantRequest(testUser1.getId(), testUser1.getUsername()),
                         new GroupChatRequest.ParticipantRequest(testUser2.getId(), testUser2.getUsername())
@@ -174,6 +177,7 @@ class GroupChatControllerIntegrationTest {
 
         GroupChatRequest request2 = GroupChatRequest.builder()
                 .name("Group 2")
+                .ownerId(testUser1.getId())
                 .participants(List.of(
                         new GroupChatRequest.ParticipantRequest(testUser1.getId(), testUser1.getUsername()),
                         new GroupChatRequest.ParticipantRequest(testUser3.getId(), testUser3.getUsername())
@@ -215,6 +219,32 @@ class GroupChatControllerIntegrationTest {
     void createGroup_WithBlankName_ReturnsBadRequest() {
         GroupChatRequest request = GroupChatRequest.builder()
                 .name("")
+                .ownerId(testUser1.getId())
+                .participants(List.of(
+                        new GroupChatRequest.ParticipantRequest(testUser1.getId(), testUser1.getUsername()),
+                        new GroupChatRequest.ParticipantRequest(testUser2.getId(), testUser2.getUsername())
+                ))
+                .build();
+
+        try {
+            webClient.post()
+                    .uri("/api/group-chats")
+                    .header("Authorization", "Bearer " + accessToken)
+                    .bodyValue(request)
+                    .retrieve()
+                    .bodyToMono(String.class)
+                    .block();
+        } catch (Exception e) {
+            assertThat(e.getMessage()).contains("400");
+        }
+    }
+
+    @Test
+    @DisplayName("POST /api/group-chats - should fail with blank group name")
+    void createGroup_WithInvalidOwnerId_ReturnsBadRequest() {
+        GroupChatRequest request = GroupChatRequest.builder()
+                .name("")
+                .ownerId(testUser3.getId())
                 .participants(List.of(
                         new GroupChatRequest.ParticipantRequest(testUser1.getId(), testUser1.getUsername()),
                         new GroupChatRequest.ParticipantRequest(testUser2.getId(), testUser2.getUsername())
@@ -239,6 +269,7 @@ class GroupChatControllerIntegrationTest {
     void createGroup_WithOneParticipant_ReturnsBadRequest() {
         GroupChatRequest request = GroupChatRequest.builder()
                 .name("Solo Group")
+                .ownerId(testUser1.getId())
                 .participants(List.of(
                         new GroupChatRequest.ParticipantRequest(testUser1.getId(), testUser1.getUsername())
                 ))

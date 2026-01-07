@@ -1,5 +1,17 @@
-{"properties": [{
-  "name": "resume.upload.dir",
-  "type": "java.lang.String",
-  "description": "Folder where the resumes are stored"
-}]}
+{"properties": [
+  {
+    "name": "resume.upload.dir",
+    "type": "java.lang.String",
+    "description": "Folder where the resumes are stored"
+  },
+  {
+    "name": "jwt.secret",
+    "type": "java.lang.String",
+    "description": "the JWT secret Key"
+  },
+  {
+    "name": "jwt.expiration",
+    "type": "java.lang.String",
+    "description": "time after with the JWT expires"
+  }
+]}
