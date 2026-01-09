@@ -1,12 +1,15 @@
 package com.opencode.alumxbackend.chat.service;
 
 import java.util.Optional;
+import java.util.List;
 
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.opencode.alumxbackend.chat.dto.ChatSendResponse;
+import com.opencode.alumxbackend.chat.dto.ChatSummaryResponse;
+import com.opencode.alumxbackend.chat.dto.ChatSummaryView;
 import com.opencode.alumxbackend.chat.model.Chat;
 import com.opencode.alumxbackend.chat.model.Message;
 import com.opencode.alumxbackend.chat.repository.ChatRepository;
@@ -96,6 +99,30 @@ public class ChatServiceImpl implements ChatService {
         messagingTemplate.convertAndSend("/topic/chat/" + chatId, response);
 
         return response;
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<ChatSummaryResponse> listUserChats(Long userId) {
+        List<ChatSummaryView> chats = chatRepository.findChatSummariesForUser(userId);
+
+        return chats.stream()
+                .map(view -> {
+                    boolean isUser1 = userId.equals(view.getUser1Id());
+                    Long otherUserId = isUser1 ? view.getUser2Id() : view.getUser1Id();
+                    String otherUsername = isUser1 ? view.getUser2Username() : view.getUser1Username();
+
+                    return ChatSummaryResponse.builder()
+                            .chatId(view.getChatId())
+                            .otherUserId(otherUserId)
+                            .otherUsername(otherUsername)
+                            .lastMessageContent(view.getLastMessageContent())
+                            .lastMessageSenderId(view.getLastMessageSenderId())
+                            .lastMessageSenderUsername(view.getLastMessageSenderUsername())
+                            .lastMessageAt(view.getLastMessageCreatedAt())
+                            .build();
+                })
+                .toList();
     }
 
 }
